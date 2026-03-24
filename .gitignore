@@ -5,6 +5,7 @@ node_modules/
 dist/
 build/
 build/packages/
+/*.tgz
 coverage/
 .nyc_output/
 *.tsbuildinfo

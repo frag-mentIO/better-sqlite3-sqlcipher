@@ -8,7 +8,9 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     }
   },
   "files": [
@@ -21,7 +23,6 @@
     "build": "tsc -p tsconfig.json",
     "prepare": "npm run build",
     "prepack": "npm run build",
-    "pack:local": "bash ./scripts/pack-local.sh",
     "test": "vitest run --config tests/vitest.config.ts",
     "postinstall": "bash ./scripts/bootstrap.sh postinstall",
     "sqlcipher:bootstrap": "bash ./scripts/bootstrap.sh",

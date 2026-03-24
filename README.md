@@ -24,14 +24,11 @@ Internal package that isolates SQLCipher runtime access for the desktop app.
 - `npm run sqlcipher:ensure`: rebuild only when Electron/version/vendor hash changed.
 - `npm run sqlcipher:rebuild`: rebuild `better-sqlite3` for Electron against SQLCipher.
 - `npm run sqlcipher:check`: run runtime health check (`PRAGMA cipher_version`).
-- `npm run pack:local`: bump patch version and create `.tgz` in `build/packages`.
+- `npm pack`: create `.tgz` in `build/packages`.
 - `npm run test`: run adapter unit tests.
 
-`postinstall` does not bootstrap by default. To enable auto-bootstrap during install:
-
-```bash
-SQLCIPHER_AUTO_BOOTSTRAP=1 npm install
-```
+`postinstall` tries to bootstrap automatically during install (best effort).
+If it fails, install still succeeds and you can run strict mode manually.
 
 For deterministic local/CI setup, run strict mode manually:
 
@@ -55,7 +52,7 @@ Option A (fast iteration): use a local file dependency in the host app:
 Then reinstall in the host app and run:
 
 ```bash
-npm run sqlcipher:bootstrap:strict
+FRAGMENT_APP_ROOT="$PWD" bash ./node_modules/@fragment/sqlcipher-adapter/scripts/bootstrap.sh strict
 ```
 
 Option B (closest to real npm install): install from local tarball:
@@ -65,8 +62,8 @@ Option B (closest to real npm install): install from local tarball:
 npm pack
 
 # in host app
-npm i ../sqlcipher-adapter/fragment-sqlcipher-adapter-0.1.0.tgz
-npm run sqlcipher:bootstrap:strict
+npm i ../sqlcipher-adapter/build/packages/fragment-sqlcipher-adapter-*.tgz
+FRAGMENT_APP_ROOT="$PWD" bash ./node_modules/@fragment/sqlcipher-adapter/scripts/bootstrap.sh strict
 ```
 
 ## System dependencies

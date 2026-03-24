@@ -26,13 +26,11 @@ if [ "$STRICT_MODE" = "strict" ]; then
   exit 0
 fi
 
-if [ "$IS_POSTINSTALL" = "1" ] && [ "${SQLCIPHER_AUTO_BOOTSTRAP:-0}" != "1" ]; then
-  echo "Skipping SQLCipher bootstrap during postinstall (set SQLCIPHER_AUTO_BOOTSTRAP=1 to enable)."
-  echo "Run manually when needed: npm run sqlcipher:bootstrap:strict"
-  exit 0
-fi
-
 if ! run_bootstrap; then
-  echo "WARNING: SQLCipher bootstrap failed during postinstall."
-  echo "Run manually: npm run sqlcipher:bootstrap:strict"
+  if [ "$IS_POSTINSTALL" = "1" ]; then
+    echo "WARNING: SQLCipher bootstrap failed during postinstall."
+    echo "Run manually: npm run sqlcipher:bootstrap:strict"
+    exit 0
+  fi
+  exit 1
 fi

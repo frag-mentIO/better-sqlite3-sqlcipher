@@ -12,7 +12,7 @@ AMALGAMATION_DIR="$PACKAGE_DIR/vendor/sqlcipher-amalgamation"
 ELECTRON_VERSION="${ELECTRON_VERSION:-}"
 
 if [ -z "$ELECTRON_VERSION" ]; then
-  ELECTRON_VERSION="$(node -p "const pkg=require('$ROOT_DIR/package.json'); (pkg.devDependencies&&pkg.devDependencies.electron)||(pkg.dependencies&&pkg.dependencies.electron)||''")"
+  ELECTRON_VERSION="$(node -e "const path=require('path'); const root=process.argv[1]; const pkg=require(path.join(root,'package.json')); const v=(pkg.devDependencies&&pkg.devDependencies.electron)||(pkg.dependencies&&pkg.dependencies.electron)||''; process.stdout.write(v||'');" "$ROOT_DIR")"
 fi
 
 if [ -z "$ELECTRON_VERSION" ]; then
