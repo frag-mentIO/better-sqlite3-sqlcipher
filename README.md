@@ -20,13 +20,54 @@ Internal package that isolates SQLCipher runtime access for the desktop app.
 
 - `npm run sqlcipher:bootstrap`: auto-prepare + ensure (best effort).
 - `npm run sqlcipher:bootstrap:strict`: auto-prepare + ensure (fails on error, for CI/release).
-- `npm run sqlcipher:prepare`: prepare SQLCipher amalgamation into `packages/sqlcipher-adapter/vendor/sqlcipher-amalgamation`.
+- `npm run sqlcipher:prepare`: prepare SQLCipher amalgamation into `apps/sqlcipher-adapter/vendor/sqlcipher-amalgamation`.
 - `npm run sqlcipher:ensure`: rebuild only when Electron/version/vendor hash changed.
 - `npm run sqlcipher:rebuild`: rebuild `better-sqlite3` for Electron against SQLCipher.
 - `npm run sqlcipher:check`: run runtime health check (`PRAGMA cipher_version`).
+- `npm run pack:local`: bump patch version and create `.tgz` in `build/packages`.
 - `npm run test`: run adapter unit tests.
 
-`postinstall` runs `sqlcipher:bootstrap` automatically so local installs self-heal whenever possible.
+`postinstall` does not bootstrap by default. To enable auto-bootstrap during install:
+
+```bash
+SQLCIPHER_AUTO_BOOTSTRAP=1 npm install
+```
+
+For deterministic local/CI setup, run strict mode manually:
+
+```bash
+npm run sqlcipher:bootstrap:strict
+```
+
+Host app resolution:
+
+- Scripts use `FRAGMENT_APP_ROOT` (or `INIT_CWD`) to find the host app root.
+- If Electron version is not found in host `package.json`, set `ELECTRON_VERSION` explicitly.
+
+## Use locally without publishing
+
+Option A (fast iteration): use a local file dependency in the host app:
+
+```json
+"@fragment/sqlcipher-adapter": "file:../sqlcipher-adapter"
+```
+
+Then reinstall in the host app and run:
+
+```bash
+npm run sqlcipher:bootstrap:strict
+```
+
+Option B (closest to real npm install): install from local tarball:
+
+```bash
+# in apps/sqlcipher-adapter
+npm pack
+
+# in host app
+npm i ../sqlcipher-adapter/fragment-sqlcipher-adapter-0.1.0.tgz
+npm run sqlcipher:bootstrap:strict
+```
 
 ## System dependencies
 

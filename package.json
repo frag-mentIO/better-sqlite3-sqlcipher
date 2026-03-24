@@ -1,19 +1,29 @@
 {
   "name": "@fragment/sqlcipher-adapter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Internal SQLCipher adapter for Fragment desktop",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js"
+    }
+  },
   "files": [
-    "src",
+    "dist",
     "README.md",
-    "scripts"
+    "scripts",
+    "vendor/sqlcipher-amalgamation"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepack": "npm run build",
+    "pack:local": "bash ./scripts/pack-local.sh",
     "test": "vitest run --config tests/vitest.config.ts",
-    "postinstall": "bash ./scripts/bootstrap.sh",
+    "postinstall": "bash ./scripts/bootstrap.sh postinstall",
     "sqlcipher:bootstrap": "bash ./scripts/bootstrap.sh",
     "sqlcipher:bootstrap:strict": "bash ./scripts/bootstrap.sh strict",
     "sqlcipher:prepare": "bash ./scripts/prepare-amalgamation.sh",
@@ -25,7 +35,9 @@
     "better-sqlite3": "^12.8.0"
   },
   "devDependencies": {
-    "typescript": "~4.5.4",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^25.5.0",
+    "typescript": "^5.9.3",
     "vitest": "^4.1.0"
   },
   "engines": {

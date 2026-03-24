@@ -4,7 +4,9 @@ set -euo pipefail
 PACKAGE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ROOT_DIR="${FRAGMENT_APP_ROOT:-${INIT_CWD:-}}"
 if [ -z "$ROOT_DIR" ] || [ ! -f "$ROOT_DIR/package.json" ]; then
-  ROOT_DIR="$(cd "$PACKAGE_DIR/../desktop" && pwd)"
+  echo "Unable to resolve host app root."
+  echo "Set FRAGMENT_APP_ROOT to the app directory (must contain package.json)."
+  exit 1
 fi
 AMALGAMATION_DIR="$PACKAGE_DIR/vendor/sqlcipher-amalgamation"
 # Keep stamp outside better-sqlite3/build because that folder can be recreated.
@@ -21,7 +23,15 @@ hash_file() {
   node -e "const fs=require('fs');const crypto=require('crypto');const buf=fs.readFileSync(process.argv[1]);process.stdout.write(crypto.createHash('sha256').update(buf).digest('hex'))" "$file_path"
 }
 
-ELECTRON_VERSION="$(node -p "require('$ROOT_DIR/package.json').devDependencies.electron")"
+ELECTRON_VERSION="${ELECTRON_VERSION:-}"
+if [ -z "$ELECTRON_VERSION" ]; then
+  ELECTRON_VERSION="$(node -p "const pkg=require('$ROOT_DIR/package.json'); (pkg.devDependencies&&pkg.devDependencies.electron)||(pkg.dependencies&&pkg.dependencies.electron)||''")"
+fi
+if [ -z "$ELECTRON_VERSION" ]; then
+  echo "Unable to resolve Electron version from $ROOT_DIR/package.json."
+  echo "Set ELECTRON_VERSION explicitly, e.g. ELECTRON_VERSION=35.1.4 npm run sqlcipher:ensure"
+  exit 1
+fi
 SQLITE3_C_HASH="$(hash_file "$AMALGAMATION_DIR/sqlite3.c")"
 SQLITE3_H_HASH="$(hash_file "$AMALGAMATION_DIR/sqlite3.h")"
 VERSION_FILE_HASH="none"

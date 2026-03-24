@@ -4,6 +4,7 @@ node_modules/
 # Build outputs
 dist/
 build/
+build/packages/
 coverage/
 .nyc_output/
 *.tsbuildinfo

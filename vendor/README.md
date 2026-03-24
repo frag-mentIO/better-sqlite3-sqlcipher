@@ -19,5 +19,5 @@ Generated and ignored:
 Refresh command:
 
 ```bash
-npm --prefix ./packages/sqlcipher-adapter run sqlcipher:prepare
+npm --prefix ./apps/sqlcipher-adapter run sqlcipher:prepare
 ```

@@ -4,7 +4,9 @@ set -euo pipefail
 PACKAGE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ROOT_DIR="${FRAGMENT_APP_ROOT:-${INIT_CWD:-}}"
 if [ -z "$ROOT_DIR" ] || [ ! -f "$ROOT_DIR/package.json" ]; then
-  ROOT_DIR="$(cd "$PACKAGE_DIR/../desktop" && pwd)"
+  echo "Unable to resolve host app root."
+  echo "Set FRAGMENT_APP_ROOT to the app directory (must contain package.json)."
+  exit 1
 fi
 
 cd "$ROOT_DIR"
