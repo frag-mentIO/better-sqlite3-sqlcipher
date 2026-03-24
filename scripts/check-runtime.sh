@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PACKAGE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT_DIR="${FRAGMENT_APP_ROOT:-${INIT_CWD:-}}"
+if [ -z "$ROOT_DIR" ] || [ ! -f "$ROOT_DIR/package.json" ]; then
+  ROOT_DIR="$(cd "$PACKAGE_DIR/../desktop" && pwd)"
+fi
+
+cd "$ROOT_DIR"
+TMP_SCRIPT="$ROOT_DIR/.tmp-sqlcipher-runtime-check.js"
+trap 'rm -f "$TMP_SCRIPT"' EXIT
+
+cat > "$TMP_SCRIPT" <<'EOF'
+const { app } = require('electron');
+
+app.whenReady().then(() => {
+  try {
+    const Database = require('better-sqlite3');
+    const db = new Database(':memory:');
+    db.pragma("key='probe'");
+    const version = db.pragma('cipher_version', { simple: true });
+    db.close();
+    if (!version) {
+      console.error('SQLCipher runtime check failed: cipher_version is empty');
+      app.exit(1);
+      return;
+    }
+    console.log('SQLCipher runtime OK:', version);
+    app.exit(0);
+  } catch (err) {
+    console.error('SQLCipher runtime check failed:', err?.message || String(err));
+    app.exit(1);
+  }
+});
+EOF
+
+npx electron "$TMP_SCRIPT"

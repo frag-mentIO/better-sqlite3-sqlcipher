@@ -1,0 +1,34 @@
+{
+  "name": "@fragment/sqlcipher-adapter",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Internal SQLCipher adapter for Fragment desktop",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "files": [
+    "src",
+    "README.md",
+    "scripts"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run --config tests/vitest.config.ts",
+    "postinstall": "bash ./scripts/bootstrap.sh",
+    "sqlcipher:bootstrap": "bash ./scripts/bootstrap.sh",
+    "sqlcipher:bootstrap:strict": "bash ./scripts/bootstrap.sh strict",
+    "sqlcipher:prepare": "bash ./scripts/prepare-amalgamation.sh",
+    "sqlcipher:ensure": "bash ./scripts/ensure-electron-sqlcipher.sh",
+    "sqlcipher:rebuild": "bash ./scripts/rebuild-electron-sqlcipher.sh",
+    "sqlcipher:check": "bash ./scripts/check-runtime.sh"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.8.0"
+  },
+  "devDependencies": {
+    "typescript": "~4.5.4",
+    "vitest": "^4.1.0"
+  },
+  "engines": {
+    "node": "22.14.0"
+  }
+}
