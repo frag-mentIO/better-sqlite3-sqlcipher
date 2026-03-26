@@ -1,8 +1,20 @@
 {
-  "name": "@fragment/sqlcipher-adapter",
-  "version": "0.1.1",
-  "private": true,
-  "description": "Internal SQLCipher adapter for Fragment desktop",
+  "name": "@frag-ment/better-sqlite3-sqlcipher",
+  "version": "0.1.0",
+  "private": false,
+  "description": "SQLCipher-enabled better-sqlite3 adapter",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frag-mentIO/better-sqlite3-sqlcipher.git"
+  },
+  "homepage": "https://github.com/frag-mentIO/better-sqlite3-sqlcipher#readme",
+  "bugs": {
+    "url": "https://github.com/frag-mentIO/better-sqlite3-sqlcipher/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -16,6 +28,7 @@
   "files": [
     "dist",
     "README.md",
+    "LICENSE",
     "scripts",
     "vendor/sqlcipher-amalgamation"
   ],
@@ -23,6 +36,7 @@
     "build": "tsc -p tsconfig.json",
     "prepare": "npm run build",
     "prepack": "npm run build",
+    "pack": "mkdir -p build/packages && npm pack --pack-destination build/packages",
     "test": "vitest run --config tests/vitest.config.ts",
     "postinstall": "bash ./scripts/bootstrap.sh postinstall",
     "sqlcipher:bootstrap": "bash ./scripts/bootstrap.sh",
@@ -42,6 +56,6 @@
     "vitest": "^4.1.0"
   },
   "engines": {
-    "node": "22.14.0"
+    "node": ">=22.14.0"
   }
 }

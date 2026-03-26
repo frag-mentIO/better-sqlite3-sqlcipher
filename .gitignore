@@ -10,6 +10,9 @@ coverage/
 .nyc_output/
 *.tsbuildinfo
 
+# Vendor (generated locally)
+vendor/sqlcipher-src/
+
 # Logs
 logs/
 *.log
